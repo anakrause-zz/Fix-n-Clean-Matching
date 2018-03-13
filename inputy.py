@@ -363,33 +363,7 @@ def biggestGroup(a, y, z):
             Max = len(Groups[y])
             i=y
     return i ,Max
-# while true:
-#     i = findlargestmemberav()
-#     gsize =0
-#     if i==0:
-#         j,gsize = biggestGroup(Groups[4].length,Groups[5].length,Groups[6].length)
-#         #   mgobject = memeber[i][0] + groups[j][0]   #the combination of the two groups
-#         avsortedmembers[i].pop(0)
-#         Groups[j].pop(0)
-#     #    ARRofMGOBJECT.append(mgobject)
-#     elif i==1:
-#         j,gsize = biggestGroup(Groups[4].length, Groups[7].length, Groups[8].length)
-#         #   mgobject = memeber[i][0] + groups[j][0]   #the combination of the two groups
-#         avsortedmembers[i].pop(0)
-#         Groups[j].pop(0)
-#     #    ARRofMGOBJECT.append(mgobject)
-#     elif i == 2:
-#         j,gsize = biggestGroup(Groups[5].length, Groups[7].length, Groups[9].length)
-#         #   mgobject = memeber[i][0] + groups[j][0]   #the combination of the two groups
-#         avsortedmembers[i].pop(0)
-#         Groups[j].pop(0)
-#     #    ARRofMGOBJECT.append(mgobject)
-#     elif i == 3:
-#         j,gsize = biggestGroup(Groups[6].length, Groups[8].length, Groups[9].length)
-#         #   mgobject = memeber[i][0] + groups[j][0]   #the combination of the two groups
-#         avsortedmembers[i].pop(0)
-#         Groups[j].pop(0)
-#     #    ARRofMGOBJECT.append(mgobject)
+
 
 cantsort = []
 SortedGroups = []

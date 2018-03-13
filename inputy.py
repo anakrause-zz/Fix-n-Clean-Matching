@@ -198,33 +198,12 @@ for m in np_df_mem:
     mem = Member(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9])
     members.append(mem)
 
-#for x in range(len(groupsfive[5])):
-#    print (groupsfive[5][x].returngroupinfo())
-
-#for x in range(5):
-    #print (groupsfour[x].returngroupinfo())
-#print (members[5].returnmeminfo())
-
 def checknan(teststring):
     if "nan" in teststring:
         return ""
     else:
         return teststring
-# test case for 2 and 2
-#thefirst = groupstwo[4][0]
-#thesecond = groupstwo[4][1]
 
-#test case for 3 and 1
-thefirst = groupstwo[4][0]
-thesecond = groupsone[4][0]
-thethird = groupsone[4][1]
-thefourth = groupsone[4][2]
-#print (thefirst.returngroupinfo())
-#print (thesecond.returngroupinfo())
-#print (thethird.returngroupinfo())
-#print (thefourth.returngroupinfo())
-
-#                   1       1       2           1
 def combineGroups(first, second, third = 0, fourth = 0):
     one = 0
     two = 0
@@ -328,27 +307,11 @@ def combineGroups(first, second, third = 0, fourth = 0):
 
 #print(combineGroups(thefirst, thesecond, thethird, thefourth).returngroupinfo())
 
-
-##KEEP ALL OF THE BLOCK COMMENTED SECTIONS FOR NOW AND I MIGHT STILL USE THEM
-
-
-# avsortedmembers=[]
-# def addempty2(arr):
-#     for x in range(4):
-#         arr.append([])
-# addempty2(avsortedmembers)
-# #print (avsortedmembers)
-# for i in members:
-#     avsortedmembers[members[i].returnnumtimeslot()-1].append(members[i])
-#
 Groups = []
 for x in range(10):
     totgroups = groupsfive[x] + groupsfour[x]
     Groups.append(totgroups)
 
-#sort availabilities 4-9
-#anastasias
-#volunteers even first
 
 def biggestGroup(a, y, z):
     Max = len(Groups[a])
@@ -368,6 +331,7 @@ def biggestGroup(a, y, z):
 cantsort = []
 SortedGroups = []
 SortedMembers = []
+sortedDict = {}
 
 while len(members) > 0:
     if members[0].returnnumtimeslot() == 0:
@@ -389,5 +353,10 @@ while len(members) > 0:
         if size == 0:
             cantsort.append(members.pop(0))
         else:
-            SortedGroups.append(Groups[index].pop(0))
-            SortedMembers.append(members.pop(0))
+            sortedDict[members.pop(0)] = Groups[index].pop(0)
+            #SortedGroups.append(Groups[index].pop(0))
+            #SortedMembers.append(members.pop(0))
+
+for x in sortedDict:
+    print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
+   # print (sortedDict.keys((x.returngroupinfo())))

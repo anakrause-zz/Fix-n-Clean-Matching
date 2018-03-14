@@ -198,6 +198,7 @@ for m in np_df_mem:
     mem = Member(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9])
     members.append(mem)
 
+
 def checknan(teststring):
     if "nan" in teststring:
         return ""
@@ -205,6 +206,7 @@ def checknan(teststring):
         return teststring
 
 def combineGroups(first, second, third = 0, fourth = 0):
+    ## Determines order for greatest to least
     one = 0
     two = 0
     three = 0
@@ -287,6 +289,7 @@ def combineGroups(first, second, third = 0, fourth = 0):
     ntime1 = one.returngroupinfo()[11]
     ntime2 = one.returngroupinfo()[12]
 
+
     oinfoarr = []
     for x in range (-4, -1, 1):
         oinfo1 = str(one.returngroupinfo()[x])
@@ -306,12 +309,78 @@ def combineGroups(first, second, third = 0, fourth = 0):
     return (gr)
 
 #print(combineGroups(thefirst, thesecond, thethird, thefourth).returngroupinfo())
+for y in range(10):
+    print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
 
+
+# JUST 3 and 2
+for y in range(10):
+    if (len(groupsthree[y]) < len(groupstwo[y])):
+        while len(groupsthree[y]) > 0:
+            new = combineGroups(groupsthree[y][0], groupstwo[y][0])
+            groupsfive.append(new)
+            groupsthree[y].pop(0)
+            groupstwo[y].pop(0)
+
+    else:
+       while len(groupstwo[y]) > 0:
+           new = combineGroups(groupstwo[y][0], groupsthree[y][0])
+           groupsfive.append(new)
+           groupsthree[y].pop(0)
+           groupstwo[y].pop(0)
+
+
+## GROUPS 3s and 1s
+for y in range(10):
+    if (len(groupsthree[y])) < len(groupsone[y]):
+        #for x in range(len(groupsthree[y])):
+        while len(groupsthree[y]) > 0:
+            new = combineGroups(groupsthree[y][0], groupsone[y][0])
+            groupsfour.append(new)
+            groupsthree[y].pop(0)
+            groupsone[y].pop(0)
+
+    else:
+        while len(groupsone[y]) > 0:
+            new = combineGroups(groupsone[y][0], groupsthree[y][0])
+            groupsfour.append(new)
+            groupsthree[y].pop(0)
+            groupsone[y].pop(0)
+
+print ("\n")
+## GROUPS 2s and 2s
+for y in range(10):
+    while (len(groupstwo[y])) > 1:
+        new = combineGroups(groupstwo[y][0], groupstwo[y][1])
+        groupsfour.append(new)
+        groupstwo[y].pop(0)
+        groupstwo[y].pop(0)
+
+## GROUPS 2s and 1 and 1
+for y in range(10):
+    while len(groupstwo[y]) > 0 and len(groupsone[y]) >= 2:
+        new = combineGroups(groupstwo[y][0], groupsone[y][0], groupsone[y][1])
+        groupsfour.append(new)
+        groupstwo[y].pop(0)
+        groupsone[y].pop(0)
+        groupsone[y].pop(0)
+
+# for y in range(10):
+#     while (len(groupsone[y])) >= 4:
+#         new = combineGroups(groupsone[y][0], groupsone[y][1], groupsone[y][2], groupsone[y][3])
+#         groupsfour.append(new)
+#         for x in range(4):
+#             groupsone[y].pop(0)
+
+for y in range(10):
+    print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
+
+
+### ALGORITHM PART STARTS HERE
 Groups = []
 for x in range(10):
     totgroups = groupsfive[x] + groupsfour[x]
     Groups.append(totgroups)
-
 
 def biggestGroup(a, y, z):
     Max = len(Groups[a])
@@ -357,6 +426,6 @@ while len(members) > 0:
             #SortedGroups.append(Groups[index].pop(0))
             #SortedMembers.append(members.pop(0))
 
-for x in sortedDict:
-    print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
+#for x in sortedDict:
+   # print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
    # print (sortedDict.keys((x.returngroupinfo())))

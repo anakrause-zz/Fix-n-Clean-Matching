@@ -2,17 +2,54 @@ import pandas as pd
 import numpy as np
 import math
 
+#--------   NEW
+#anastasia     in terminal enter 'pip install easygui'    to run
+import easygui
+import tkinter as Tk
+clientListAddress = ""
+volunteerListAddress = ""
+msg = "Please select files"
+Tk.Tk().lift()
+while True:
+    if clientListAddress == "" and volunteerListAddress == "":
+        msg = "Please select client or volunteer list"
+    elif clientListAddress == "" or type(clientListAddress)=="class 'NoneType'":
+        msg = "Please select client list"
+    elif volunteerListAddress == "" :
+        msg = "Please select volunteer list"
+    else:
+        msg = "Please click continue to match volunteers with clients or reselect files by clicking either list"
+    choices = ["Client List", "Volunteer List", "Continue", "Cancel"]
+    reply = easygui.buttonbox(msg, choices=choices)
+
+    if reply == "Client List":
+        clientListAddress = easygui.fileopenbox()
+    elif reply == "Volunteer List":
+        volunteerListAddress = easygui.fileopenbox()
+    elif reply == "Cancel":
+        break
+    elif clientListAddress != "" and volunteerListAddress != "" and isinstance(volunteerListAddress, str)and isinstance(clientListAddress, str) and reply == "Continue":
+        break
+    elif reply == "Continue":
+        msg = "File(s) not selected.  Please select a file before continuing"
+
+print (volunteerListAddress)
+print (clientListAddress)
+print (type(volunteerListAddress))
+print (reply)
+
+#-------- New
 # imports, parses the file and deletes useless columns
 
 # volunteer file
 
-xlsx = pd.ExcelFile('volunteers.xlsx')
+xlsx = pd.ExcelFile(volunteerListAddress)
 df = xlsx.parse(0)
 df = df.drop(df.columns[[3, 6, 9, 12]], axis=1)
 
 # members file
 
-members = pd.ExcelFile('members.xlsx')
+members = pd.ExcelFile(clientListAddress)
 thingy = members.parse(0)
 thingy = thingy.drop(thingy.columns[[7,8,9,10]], axis=1)
 
@@ -116,7 +153,8 @@ class Group(object):
 
     def returnavfinal(self):
         return(self.avfinal)
-
+    def returntime(self):
+        return (self.time)
 
 
 class Member(object):
@@ -306,13 +344,33 @@ def combineGroups(first, second, third = 0, fourth = 0):
     return (gr)
 
 #print(combineGroups(thefirst, thesecond, thethird, thefourth).returngroupinfo())
-
-Groups = []
+#----------------------------------------
+Groups2 = []
 for x in range(10):
     totgroups = groupsfive[x] + groupsfour[x]
+    Groups2.append(totgroups)
+print (groupsfive[1][0].returngroupinfo())
+print (groupsfour[1][0].returngroupinfo())
+#-----------------------------------------------------------------
+Groups=[]
+count=0
+totgroups = []
+for x in range(10):
+    while len(groupsfive[x]) >0 or len(groupsfour[x]) >0:
+        count=count +1
+        if count%2 ==0 and len(groupsfive[x]) >0:
+            totgroups.append(groupsfive[x].pop(0))
+        elif len(groupsfour[x])>0:
+            totgroups.append(groupsfour[x].pop(0))
+
+
     Groups.append(totgroups)
+    totgroups = []
 
-
+# print (Groups[1][0].returngroupinfo())
+# print (Groups2[1][0].returngroupinfo())
+# print (Groups)
+# print (Groups2)
 def biggestGroup(a, y, z):
     Max = len(Groups[a])
     i = a
@@ -326,8 +384,6 @@ def biggestGroup(a, y, z):
             Max = len(Groups[y])
             i=y
     return i ,Max
-
-
 cantsort = []
 SortedGroups = []
 SortedMembers = []
@@ -353,10 +409,15 @@ while len(members) > 0:
         if size == 0:
             cantsort.append(members.pop(0))
         else:
-            sortedDict[members.pop(0)] = Groups[index].pop(0)
-            #SortedGroups.append(Groups[index].pop(0))
-            #SortedMembers.append(members.pop(0))
+            # sortedDict[members.pop(0)] = Groups[index].pop(0)
+            SortedGroups.append(Groups[index].pop(0))
+            SortedMembers.append(members.pop(0))
 
-for x in sortedDict:
-    print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
+# for x in sortedDict:
+#     print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
    # print (sortedDict.keys((x.returngroupinfo())))
+print (type(Groups[1][0].returntime()))
+
+
+
+

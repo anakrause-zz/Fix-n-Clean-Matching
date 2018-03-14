@@ -3,16 +3,55 @@ import numpy as np
 import math
 
 # imports, parses the file and deletes useless columns
+#--------   NEW
+#anastasia     in terminal enter 'pip install easygui'    to run
+import easygui
+import tkinter as Tk
+clientListAddress = ""
+volunteerListAddress = ""
+msg = "Please select files"
+Tk.Tk().lift()
+while True:
+    if clientListAddress == "" and volunteerListAddress == "":
+        msg = "Please select client or volunteer list"
+    elif clientListAddress == "" or type(clientListAddress)=="class 'NoneType'":
+        msg = "Please select client list"
+    elif volunteerListAddress == "" :
+        msg = "Please select volunteer list"
+    else:
+        msg = "Please click continue to match volunteers with clients or reselect files by clicking either list"
+    choices = ["Client List", "Volunteer List", "Continue", "Cancel"]
+    reply = easygui.buttonbox(msg, choices=choices)
+
+    if reply == "Client List":
+        clientListAddress = easygui.fileopenbox()
+    elif reply == "Volunteer List":
+        volunteerListAddress = easygui.fileopenbox()
+    elif reply == "Cancel":
+        break
+    elif clientListAddress != "" and volunteerListAddress != "" and isinstance(volunteerListAddress, str)and isinstance(clientListAddress, str) and reply == "Continue":
+        break
+    elif reply == "Continue":
+        msg = "File(s) not selected.  Please select a file before continuing"
+
+print (volunteerListAddress)
+print (clientListAddress)
+print (type(volunteerListAddress))
+print (reply)
+
+#-------- New
 
 # volunteer file
 
-xlsx = pd.ExcelFile('volunteers.xlsx')
+# xlsx = pd.ExcelFile('volunteers.xlsx')
+xlsx = pd.ExcelFile(volunteerListAddress)
 df = xlsx.parse(0)
 df = df.drop(df.columns[[3, 6, 9, 12]], axis=1)
 
 # members file
 
-members = pd.ExcelFile('members.xlsx')
+# members = pd.ExcelFile('members.xlsx')
+members = pd.ExcelFile(clientListAddress)
 thingy = members.parse(0)
 thingy = thingy.drop(thingy.columns[[7,8,9,10]], axis=1)
 

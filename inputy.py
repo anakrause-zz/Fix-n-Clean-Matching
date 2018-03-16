@@ -80,20 +80,14 @@ print (reply)
 
 # volunteer file
 
-<<<<<<< HEAD
-=======
 # xlsx = pd.ExcelFile('volunteers.xlsx')
->>>>>>> c5b542a1e1ddd4704468b74d4393b482a8e5208f
 xlsx = pd.ExcelFile(volunteerListAddress)
 df = xlsx.parse(0)
 df = df.drop(df.columns[[3, 6, 9, 12]], axis=1)
 
 # members file
 
-<<<<<<< HEAD
-=======
 # members = pd.ExcelFile('members.xlsx')
->>>>>>> c5b542a1e1ddd4704468b74d4393b482a8e5208f
 members = pd.ExcelFile(clientListAddress)
 thingy = members.parse(0)
 thingy = thingy.drop(thingy.columns[[7,8,9,10]], axis=1)
@@ -392,10 +386,10 @@ def combineGroups(first, second, third = 0, fourth = 0):
     return (gr)
 
 #print(combineGroups(thefirst, thesecond, thethird, thefourth).returngroupinfo())
-<<<<<<< HEAD
+
 #----------------------------------------
 Groups2 = []
-=======
+
 for y in range(10):
     print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
 
@@ -465,7 +459,7 @@ for y in range(10):
 
 ### ALGORITHM PART STARTS HERE
 Groups = []
->>>>>>> c5b542a1e1ddd4704468b74d4393b482a8e5208f
+
 for x in range(10):
     totgroups = groupsfive[x] + groupsfour[x]
     Groups2.append(totgroups)
@@ -484,7 +478,6 @@ for x in range(10):
             totgroups.append(groupsfour[x].pop(0))
 
 
-<<<<<<< HEAD
     Groups.append(totgroups)
     totgroups = []
 
@@ -492,8 +485,6 @@ for x in range(10):
 # print (Groups2[1][0].returngroupinfo())
 # print (Groups)
 # print (Groups2)
-=======
->>>>>>> c5b542a1e1ddd4704468b74d4393b482a8e5208f
 def biggestGroup(a, y, z):
     Max = len(Groups[a])
     i = a
@@ -543,10 +534,6 @@ print (type(Groups[1][0].returntime()))
 
 
 
-
-<<<<<<< HEAD
-=======
 #for x in sortedDict:
    # print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
    # print (sortedDict.keys((x.returngroupinfo())))
->>>>>>> c5b542a1e1ddd4704468b74d4393b482a8e5208f

@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 import math
+from string import Template
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 #--------   NEW
 #anastasia     in terminal enter 'pip install easygui'    to run
@@ -33,10 +37,10 @@ while True:
     elif reply == "Continue":
         msg = "File(s) not selected.  Please select a file before continuing"
 
-print (volunteerListAddress)
-print (clientListAddress)
-print (type(volunteerListAddress))
-print (reply)
+# print (volunteerListAddress)
+# print (clientListAddress)
+# print (type(volunteerListAddress))
+# print (reply)
 
 # volunteer file
 
@@ -216,7 +220,6 @@ addempty(groupsone)
 # iterates over all group arrays from original matrix (each g is a group array)
 # gr is a group object that is created with array input g[0], g[1], g[...]
 # append certain objects to certain arrays based on groupsize (gsize) and avfinal value
-#print (np_df_vol[5])
 for g in np_df_vol:
     gr = Group(g[0], g[1], g[2], g[3], g[4], g[5], g[6], g[7], g[8], g[9], g[10], g[11], g[12], g[13], g[14], g[15])
     if gr.returngroupsize() == 5:
@@ -234,8 +237,6 @@ for g in np_df_vol:
 for m in np_df_mem:
     mem = Member(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9])
     members.append(mem)
-
-print (len(members))
 
 def checknan(teststring):
     if "nan" in teststring:
@@ -370,9 +371,9 @@ def combineGroups(first, second, third = 0, fourth = 0):
     return (gr)
 
 #----------------------------------------
-for y in range(10):
-    print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
-
+# for y in range(10):
+#     print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
+#
 
 # JUST 3 and 2
 for y in range(10):
@@ -408,7 +409,6 @@ for y in range(10):
             groupsthree[y].pop(0)
             groupsone[y].pop(0)
 
-print ("\n")
 ## GROUPS 2s and 2s
 for y in range(10):
     while (len(groupstwo[y])) > 1:
@@ -437,12 +437,8 @@ for y in range(10):
         groupsone[y].pop(0)
 
 
-for y in range(10):
-    print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
-
-
-
-
+# for y in range(10):
+#     print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
 
 
 ### ALGORITHM PART STARTS HERE
@@ -484,8 +480,6 @@ def biggestGroup(a, y, z):
             i=y
     return i ,Max
 
-print (len(members))
-
 cantsort = []
 SortedGroups = []
 SortedMembers = []
@@ -513,6 +507,77 @@ while len(members) > 0:
         else:
             SortedGroups.append(Groups[index].pop(0))
             SortedMembers.append(members.pop(0))
+sortedLinks = []
+sortedAddress = []
 
-## list CANTSORT HOLDS ALL MEMBERS WE CANT SORT
-## list groupsfive, groupsfour, groupsthree, groupstwo, groupsone holds leftover groups/individuals
+def createlink(inaddress):
+    base = 'https://www.google.com/maps/dir/?api=1&origin=Beamish-Munro+Hall+ON&destination='
+    a,b,c = inaddress.split(' ')
+    target = a + '%20' + b + '%20' + c + '%20'+ 'Kingston%2C%20ON&travelmode=walking'
+    outaddress = base + target
+    return (outaddress)
+
+for member in SortedMembers:
+    addr = (member.returnmeminfo()[-3])
+    sortedLinks.append(createlink(addr))
+    sortedAddress.append(addr)
+
+# WE HAVE SORTED LINKS
+# CREATE EMAILS IN ORDER:
+sortedEmails = []
+sortedTime = []
+
+for group in SortedGroups:
+    email = (group.returngroupinfo()[2])
+    sortedEmails.append(email)
+
+for member in SortedMembers:
+    otime = (member.returnmeminfo()[6])
+    newtime = ""
+    if otime == "Saturday Morning":
+        newtime = "Saturday 9am - 12pm"
+    elif otime == "Saturday Afternoon":
+        newtime = "Saturday 1pm - 4pm"
+    elif otime == "Sunday Morning":
+        newtime = "Sunday 9am - 12pm"
+    elif otime == "Sunday Afternoon":
+        newtime = "Sunday 1pm - 4pm"
+
+    sortedTime.append(newtime)
+
+sortedEmails = ["anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca"]
+
+
+def read_template(filename):
+    with open(filename, 'r', encoding='utf-8') as template_file:
+        template_file_content = template_file.read()
+    return Template(template_file_content)
+
+s = smtplib.SMTP(host= "smtp.gmail.com", port=587)
+s.starttls()
+s.login("akrause1999@gmail.com", "Anak1999!!")
+#s = smtplib.SMTP_SSL('smtp.gmail.com:465')
+#s.login('akrause1999@gmail.com', 'Anak1999!!')
+#s.sendmail('from', 'to', msg.as_string())
+
+message_template = read_template('message.txt')
+
+for email, time, address, link in zip(sortedEmails, sortedTime, sortedAddress, sortedLinks):
+    msg = MIMEMultipart()  # create a message
+
+    # add in the actual person name to the message template
+    message = message_template.substitute(TIME_SLOT=time.title(), ADDRESS= address.title(), LINK=link.title())
+
+    # setup the parameters of the message
+    msg['From'] = "akrause1999@gmail.com"
+    msg['To'] = email
+    msg['Subject'] = "Your Fix 'n' Clean Volunteer Assignment"
+
+    # add in the message body
+    msg.attach(MIMEText(message.lower(), 'plain'))
+
+    # send the message via the server set up earlier.
+    s.send_message(msg)
+    del msg
+
+s.quit()

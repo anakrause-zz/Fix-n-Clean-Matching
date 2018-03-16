@@ -1,0 +1,13 @@
+Dear Volunteer,
+
+Thank you so much for volunteering for this cause.
+Your information is below as follows:
+
+Time: ${TIME_SLOT}
+Location: ${ADDRESS}
+Direction link: ${LINK}
+
+Be sure to sign in at the ILC beforehand.
+
+Sincerly,
+Fix 'N' Clean Coordinators

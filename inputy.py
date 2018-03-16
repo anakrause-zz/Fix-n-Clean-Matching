@@ -2,6 +2,11 @@ import pandas as pd
 import numpy as np
 import math
 import xlsxwriter
+from string import Template
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 #--------   NEW
 #anastasia     in terminal enter 'pip install easygui'    to run
 import easygui
@@ -34,10 +39,10 @@ while True:
     elif reply == "Continue":
         msg = "File(s) not selected.  Please select a file before continuing"
 
-print (volunteerListAddress)
-print (clientListAddress)
-print (type(volunteerListAddress))
-print (reply)
+# print (volunteerListAddress)
+# print (clientListAddress)
+# print (type(volunteerListAddress))
+# print (reply)
 
 # volunteer file
 
@@ -268,7 +273,6 @@ addempty(groupsone)
 # iterates over all group arrays from original matrix (each g is a group array)
 # gr is a group object that is created with array input g[0], g[1], g[...]
 # append certain objects to certain arrays based on groupsize (gsize) and avfinal value
-#print (np_df_vol[5])
 for g in np_df_vol:
     gr = Group(g[0], g[1], g[2], g[3], g[4], g[5], g[6], g[7], g[8], g[9], g[10], g[11], g[12], g[13], g[14], g[15])
     if gr.returngroupsize() == 5:
@@ -287,7 +291,6 @@ for m in np_df_mem:
     mem = Member(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9])
     members.append(mem)
 
-
 def checknan(teststring):
     if "nan" in teststring:
         return ""
@@ -300,6 +303,12 @@ def combineGroups(first, second, third = 0, fourth = 0):
     two = 0
     three = 0
     four = 0
+    if first.returngroupsize() == 1 and second.returngroupsize() == 1 and third.returngroupsize() == 1 and fourth.returngroupsize() == 1:
+        one = first
+        two = second
+        three = third
+        four = fourth
+
     if first.returngroupsize() < second.returngroupsize():
         two = first
         one = second
@@ -414,14 +423,10 @@ def combineGroups(first, second, third = 0, fourth = 0):
     gr = Group(ntimestamp, nvol1name, nvol1email, nvol2name, nvol2email, nvol3name, nvol3email, nvol4name, nvol4email, nvol5name, nvol5email, ntime1, ntime2, ninfo1, ninfo2, ninfo3)
     return (gr)
 
-#print(combineGroups(thefirst, thesecond, thethird, thefourth).returngroupinfo())
-
 #----------------------------------------
-Groups2 = []
-
-for y in range(10):
-    print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
-
+# for y in range(10):
+#     print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
+#
 
 # JUST 3 and 2
 for y in range(10):
@@ -457,7 +462,6 @@ for y in range(10):
             groupsthree[y].pop(0)
             groupsone[y].pop(0)
 
-print ("\n")
 ## GROUPS 2s and 2s
 for y in range(10):
     while (len(groupstwo[y])) > 1:
@@ -475,27 +479,31 @@ for y in range(10):
         groupsone[y].pop(0)
         groupsone[y].pop(0)
 
-# for y in range(10):
-#     while (len(groupsone[y])) >= 4:
-#         new = combineGroups(groupsone[y][0], groupsone[y][1], groupsone[y][2], groupsone[y][3])
-#         groupsfour.append(new)
-#         for x in range(4):
-#             groupsone[y].pop(0)
-
+## GROUPS of 1 1 1 and 1
 for y in range(10):
-    print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
+    while (len(groupsone[y])) >= 4:
+        new = combineGroups(groupsone[y][0], groupsone[y][1], groupsone[y][2], groupsone[y][3])
+        groupsfour.append(new)
+        groupsone[y].pop(0)
+        groupsone[y].pop(0)
+        groupsone[y].pop(0)
+        groupsone[y].pop(0)
+
+
+# for y in range(10):
+#     print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
 
 
 ### ALGORITHM PART STARTS HERE
 Groups = []
-
+Groups2 = []
 for x in range(10):
     totgroups = groupsfive[x] + groupsfour[x]
     Groups2.append(totgroups)
-print (groupsfive[1][0].returngroupinfo())
-print (groupsfour[1][0].returngroupinfo())
+
 #-----------------------------------------------------------------
 Groups=[]
+
 count=0
 totgroups = []
 for x in range(10):
@@ -510,10 +518,7 @@ for x in range(10):
     Groups.append(totgroups)
     totgroups = []
 
-# print (Groups[1][0].returngroupinfo())
-# print (Groups2[1][0].returngroupinfo())
-# print (Groups)
-# print (Groups2)
+
 def biggestGroup(a, y, z):
     Max = len(Groups[a])
     i = a
@@ -527,6 +532,7 @@ def biggestGroup(a, y, z):
             Max = len(Groups[y])
             i=y
     return i ,Max
+
 cantsort = []
 SortedGroups = []
 SortedMembers = []
@@ -541,7 +547,7 @@ while len(members) > 0:
             index = avm-1
             size = 1
         elif avm ==1:
-            index , size = biggestGroup(4,5,6)
+            index , size = biggestGroup(4, 5, 6)
         elif avm == 2:
             index, size = biggestGroup(4, 7, 8)
         elif avm ==3:
@@ -552,13 +558,10 @@ while len(members) > 0:
         if size == 0:
             cantsort.append(members.pop(0))
         else:
-            # sortedDict[members.pop(0)] = Groups[index].pop(0)
             SortedGroups.append(Groups[index].pop(0))
             SortedMembers.append(members.pop(0))
+            
 
-# for x in sortedDict:
-#     print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
-   # print (sortedDict.keys((x.returngroupinfo())))
 
 print (type(Groups[1][0].returntime()))
 
@@ -658,232 +661,78 @@ for y in range(len(Groups)):
         row = row +1
 
 workbook.close()
-#for x in sortedDict:
-   # print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
-   # print (sortedDict.keys((x.returngroupinfo())))
+
+sortedLinks = []
+sortedAddress = []
+
+def createlink(inaddress):
+    base = 'https://www.google.com/maps/dir/?api=1&origin=Beamish-Munro+Hall+ON&destination='
+    a,b,c = inaddress.split(' ')
+    target = a + '%20' + b + '%20' + c + '%20'+ 'Kingston%2C%20ON&travelmode=walking'
+    outaddress = base + target
+    return (outaddress)
+
+for member in SortedMembers:
+    addr = (member.returnmeminfo()[-3])
+    sortedLinks.append(createlink(addr))
+    sortedAddress.append(addr)
+
+# WE HAVE SORTED LINKS
+# CREATE EMAILS IN ORDER:
+sortedEmails = []
+sortedTime = []
+
+for group in SortedGroups:
+    email = (group.returngroupinfo()[2])
+    sortedEmails.append(email)
+
+for member in SortedMembers:
+    otime = (member.returnmeminfo()[6])
+    newtime = ""
+    if otime == "Saturday Morning":
+        newtime = "Saturday 9am - 12pm"
+    elif otime == "Saturday Afternoon":
+        newtime = "Saturday 1pm - 4pm"
+    elif otime == "Sunday Morning":
+        newtime = "Sunday 9am - 12pm"
+    elif otime == "Sunday Afternoon":
+        newtime = "Sunday 1pm - 4pm"
+
+    sortedTime.append(newtime)
+
+sortedEmails = ["anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca","anastasiavkrause@gmail.com", "16jmd9@queensu.ca"]
 
 
+def read_template(filename):
+    with open(filename, 'r', encoding='utf-8') as template_file:
+        template_file_content = template_file.read()
+    return Template(template_file_content)
 
+s = smtplib.SMTP(host= "smtp.gmail.com", port=587)
+s.starttls()
+s.login("akrause1999@gmail.com", "Anak1999!!")
+#s = smtplib.SMTP_SSL('smtp.gmail.com:465')
+#s.login('akrause1999@gmail.com', 'Anak1999!!')
+#s.sendmail('from', 'to', msg.as_string())
 
+message_template = read_template('message.txt')
 
+for email, time, address, link in zip(sortedEmails, sortedTime, sortedAddress, sortedLinks):
+    msg = MIMEMultipart()  # create a message
 
-#
-# row =1
-# for x in range(len(SortedGroups)):
-#     try:
-#         worksheet.write(row, 0, SortedMembers[x].returnname())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 1, SortedMembers[x].returnphone())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 2, SortedMembers[x].returnemail())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 3, SortedMembers[x].returnmethcontact())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 4, SortedMembers[x].returnifcontacted())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 5, SortedMembers[x].returnifconfirm)
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 6, SortedMembers[x].returntimeslot())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 7, SortedMembers[x].returntask())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 8, SortedMembers[x].returnaddress())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 9, SortedMembers[x].returninfo())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 11, SortedGroups[x].returntime())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 12,SortedGroups[x].returnname1())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 13, SortedGroups[x].returnemail1())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 14, SortedGroups[x].returnname2())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 15, SortedGroups[x].returnemail2())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 16, SortedGroups[x].returnname3())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 17, SortedGroups[x].returnemail3())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 18, SortedGroups[x].returnname4())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 19, SortedGroups[x].returnemail4())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 20, SortedGroups[x].returnname5())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 21, SortedGroups[x].returnemail5())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 22, SortedGroups[x].returnav1())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 23, SortedGroups[x].returnav2())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 24, SortedGroups[x].returnif21())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 25, SortedGroups[x].returnnetid())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 26, SortedGroups[x].returninfo())
-#     except:
-#         pass
-#     row = row+1
-# row = row+2
-# for x in range(len(cantsort)):
-#     try:
-#         worksheet.write(row, 0, SortedMembers[x].returnname())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 1, SortedMembers[x].returnphone())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 2, SortedMembers[x].returnemail())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 3, SortedMembers[x].returnmethcontact())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 4, SortedMembers[x].returnifcontacted())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 5, SortedMembers[x].returnifconfirm)
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 6, SortedMembers[x].returntimeslot())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 7, SortedMembers[x].returntask())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 8, SortedMembers[x].returnaddress())
-#     except:
-#         pass
-#     try:
-#         worksheet.write(row, 9, SortedMembers[x].returninfo())
-#     except:
-#         pass
-#     row=row+1
-#
-# row = row+2
-# for y in range(len(Groups)):
-#     for x in range(len(Groups[y])):
-#         try:
-#             worksheet.write(row, 11, SortedGroups[x].returntime())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 12, SortedGroups[x].returnname1())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 13, SortedGroups[x].returnemail1())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 14, SortedGroups[x].returnname2())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 15, SortedGroups[x].returnemail2())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 16, SortedGroups[x].returnname3())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 17, SortedGroups[x].returnemail3())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 18, SortedGroups[x].returnname4())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 19, SortedGroups[x].returnemail4())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 20, SortedGroups[x].returnname5())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 21, SortedGroups[x].returnemail5())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 22, SortedGroups[x].returnav1())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 23, SortedGroups[x].returnav2())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 24, SortedGroups[x].returnif21())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 25, SortedGroups[x].returnnetid())
-#         except:
-#             pass
-#         try:
-#             worksheet.write(row, 26, SortedGroups[x].returninfo())
-#         except:
-#             pass
-#         row = row + 1
+    # add in the actual person name to the message template
+    message = message_template.substitute(TIME_SLOT=time.title(), ADDRESS= address.title(), LINK=link.title())
+
+    # setup the parameters of the message
+    msg['From'] = "akrause1999@gmail.com"
+    msg['To'] = email
+    msg['Subject'] = "Your Fix 'n' Clean Volunteer Assignment"
+
+    # add in the message body
+    msg.attach(MIMEText(message.lower(), 'plain'))
+
+    # send the message via the server set up earlier.
+    s.send_message(msg)
+    del msg
+
+s.quit()

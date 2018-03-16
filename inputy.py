@@ -38,46 +38,6 @@ print (clientListAddress)
 print (type(volunteerListAddress))
 print (reply)
 
-#-------- New
-# imports, parses the file and deletes useless columns
-#--------   NEW
-#anastasia     in terminal enter 'pip install easygui'    to run
-import easygui
-import tkinter as Tk
-clientListAddress = ""
-volunteerListAddress = ""
-msg = "Please select files"
-Tk.Tk().lift()
-while True:
-    if clientListAddress == "" and volunteerListAddress == "":
-        msg = "Please select client or volunteer list"
-    elif clientListAddress == "" or type(clientListAddress)=="class 'NoneType'":
-        msg = "Please select client list"
-    elif volunteerListAddress == "" :
-        msg = "Please select volunteer list"
-    else:
-        msg = "Please click continue to match volunteers with clients or reselect files by clicking either list"
-    choices = ["Client List", "Volunteer List", "Continue", "Cancel"]
-    reply = easygui.buttonbox(msg, choices=choices)
-
-    if reply == "Client List":
-        clientListAddress = easygui.fileopenbox()
-    elif reply == "Volunteer List":
-        volunteerListAddress = easygui.fileopenbox()
-    elif reply == "Cancel":
-        break
-    elif clientListAddress != "" and volunteerListAddress != "" and isinstance(volunteerListAddress, str)and isinstance(clientListAddress, str) and reply == "Continue":
-        break
-    elif reply == "Continue":
-        msg = "File(s) not selected.  Please select a file before continuing"
-
-print (volunteerListAddress)
-print (clientListAddress)
-print (type(volunteerListAddress))
-print (reply)
-
-#-------- New
-
 # volunteer file
 
 # xlsx = pd.ExcelFile('volunteers.xlsx')
@@ -320,11 +280,23 @@ def combineGroups(first, second, third = 0, fourth = 0):
     ntimestamp = one.returngroupinfo()[0]
     nvol1name = one.returngroupinfo()[1]
     nvol1email = one.returngroupinfo()[2]
-    nvol2name = one.returngroupinfo()[3]
-    nvol2email = one.returngroupinfo()[4]
+
+    ## COMBINE 1 1 1 1
+    if one.returngroupsize() == 1 and two.returngroupsize() == 1 and three.returngroupsize() == 1 and four.returngroupsize() == 1:
+        nvol2name = two.returngroupinfo()[1]
+        nvol2email = two.returngroupinfo()[2]
+        nvol3name = three.returngroupinfo()[1]
+        nvol3email = three.returngroupinfo()[2]
+        nvol4name = four.returngroupinfo()[1]
+        nvol4email = four.returngroupinfo()[2]
+
+        nvol5name = float('nan')
+        nvol5email = float('nan')
 
     ## COMBINE 3 and 2
     if one.returngroupsize() == 3 and two.returngroupsize() == 2:
+        nvol2name = one.returngroupinfo()[3]
+        nvol2email = one.returngroupinfo()[4]
         nvol3name = one.returngroupinfo()[5]
         nvol3email = one.returngroupinfo()[6]
 
@@ -335,6 +307,8 @@ def combineGroups(first, second, third = 0, fourth = 0):
 
     # COMBINE 2 and 2 OR 3 and 1
     if (one.returngroupsize() == 2 and two.returngroupsize() == 2) or (one.returngroupsize() == 3 and two.returngroupsize() == 1):
+        nvol2name = one.returngroupinfo()[3]
+        nvol2email = one.returngroupinfo()[4]
         if (one.returngroupsize() == 2 and two.returngroupsize() == 2):
             nvol3name = two.returngroupinfo()[1]
             nvol3email = two.returngroupinfo()[2]
@@ -349,7 +323,10 @@ def combineGroups(first, second, third = 0, fourth = 0):
         nvol5name = float('nan')
         nvol5email = float('nan')
 
+    # 2 1 1 or 2 1 1 1
     if (one.returngroupsize() == 2 and two.returngroupsize() == 1 and three.returngroupsize() == 1):
+        nvol2name = one.returngroupinfo()[3]
+        nvol2email = one.returngroupinfo()[4]
         nvol3name = two.returngroupinfo()[1]
         nvol3email = two.returngroupinfo()[2]
         nvol4name = three.returngroupinfo()[1]

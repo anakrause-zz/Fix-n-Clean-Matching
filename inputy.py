@@ -423,12 +423,16 @@ for y in range(10):
         groupsone[y].pop(0)
         groupsone[y].pop(0)
 
+## GROUPS of 1 1 1 and 1
 # for y in range(10):
 #     while (len(groupsone[y])) >= 4:
 #         new = combineGroups(groupsone[y][0], groupsone[y][1], groupsone[y][2], groupsone[y][3])
 #         groupsfour.append(new)
-#         for x in range(4):
-#             groupsone[y].pop(0)
+#         groupsone[y].pop(0)
+#         groupsone[y].pop(0)
+#         groupsone[y].pop(0)
+#         groupsone[y].pop(0)
+
 
 for y in range(10):
     print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
@@ -440,8 +444,7 @@ Groups = []
 for x in range(10):
     totgroups = groupsfive[x] + groupsfour[x]
     Groups2.append(totgroups)
-print (groupsfive[1][0].returngroupinfo())
-print (groupsfour[1][0].returngroupinfo())
+
 #-----------------------------------------------------------------
 Groups=[]
 count=0
@@ -489,7 +492,7 @@ while len(members) > 0:
             index = avm-1
             size = 1
         elif avm ==1:
-            index , size = biggestGroup(4,5,6)
+            index , size = biggestGroup(4, 5, 6)
         elif avm == 2:
             index, size = biggestGroup(4, 7, 8)
         elif avm ==3:
@@ -507,7 +510,6 @@ while len(members) > 0:
 # for x in sortedDict:
 #     print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
    # print (sortedDict.keys((x.returngroupinfo())))
-print (type(Groups[1][0].returntime()))
 
 
 

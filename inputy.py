@@ -1,11 +1,12 @@
 import pandas as pd
 import numpy as np
 import math
-
+import xlsxwriter
 #--------   NEW
 #anastasia     in terminal enter 'pip install easygui'    to run
 import easygui
 import tkinter as Tk
+import xlwt
 clientListAddress = ""
 volunteerListAddress = ""
 msg = "Please select files"
@@ -149,12 +150,40 @@ class Group(object):
 
     def returngroupsize(self):
         return(self.gsize)
-
     def returnavfinal(self):
         return(self.avfinal)
     def returntime(self):
         return (self.time)
-
+    def returnname1(self):
+        return (self.name1)
+    def returnname2(self):
+        return (self.name2)
+    def returnname3(self):
+        return (self.name3)
+    def returnname4(self):
+        return (self.name4)
+    def returnname5(self):
+        return (self.name5)
+    def returnemail1(self):
+        return (self.email1)
+    def returnemail2(self):
+        return (self.email2)
+    def returnemail3(self):
+        return (self.email3)
+    def returnemail4(self):
+        return (self.email4)
+    def returnemail5(self):
+        return (self.email5)
+    def returnav1(self):
+        return (self.av1)
+    def returnav2(self):
+        return (self.av2)
+    def returnif21(self):
+        return (self.if21)
+    def returnnetid(self):
+        return (self.netid)
+    def returninfo(self):
+        return (self.info)
 
 class Member(object):
     def __init__(self, name, phone, email, methcontact, ifcontacted, ifconfirm, timeslot, task, address, info):
@@ -193,6 +222,29 @@ class Member(object):
 
     def returnnumtimeslot(self):
         return self.numtimeslot
+    def returnname(self):
+        return self.name
+    def returnphone(self):
+        return self.phone
+    def returnemail(self):
+        return self.email
+    def returnmethcontact(self):
+        return self.methcontact
+    def returnifcontacted(self):
+        return self.ifcontacted
+    def returnifconfirm(self):
+        return self.ifconfirm
+    def returntimeslot(self):
+        return self.timeslot
+    def returntask(self):
+        return self.task
+    def returnaddress(self):
+        return self.address
+    def returninfo(self):
+        return self.info
+    def returnflagged(self):
+        return self.flagged
+
 
 
 def addempty(arr):
@@ -507,10 +559,331 @@ while len(members) > 0:
 # for x in sortedDict:
 #     print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
    # print (sortedDict.keys((x.returngroupinfo())))
+
 print (type(Groups[1][0].returntime()))
 
+workbook = xlsxwriter.Workbook('Matched groups.xlsx')
+worksheet = workbook.add_worksheet()
+worksheet.write(0,0,"Community Member Name")
+worksheet.write(0,1,"Phone Number")
+worksheet.write(0,2,"Email")
+worksheet.write(0,3,"Method of contact")
+worksheet.write(0,4,"contacted to confirm?")
+worksheet.write(0,5,"confirmed")
+worksheet.write(0,6,"Date and time")
+worksheet.write(0,7,"Task")
+worksheet.write(0,8,"Adress")
+worksheet.write(0,9,"Other Info")
+worksheet.write(0,11,"Signup time")
+worksheet.write(0,12,"Volunteer 1 Name")
+worksheet.write(0,13,"Volunteer 1 Email")
+worksheet.write(0,14,"Volunteer 2 Name")
+worksheet.write(0,15,"Volunteer 2 Email")
+worksheet.write(0,16,"Volunteer 3 Name")
+worksheet.write(0,17,"Volunteer 3 Email")
+worksheet.write(0,18,"Volunteer 4 Name")
+worksheet.write(0,19,"Volunteer 4 Email")
+worksheet.write(0,20,"Volunteer 5 Name")
+worksheet.write(0,21,"Volunteer 5 Email")
+worksheet.write(0,22,"Time 1")
+worksheet.write(0,23,"Time 2")
+worksheet.write(0,24,"Is someone over 21 and will drive?")
+worksheet.write(0,25,"NetId")
+worksheet.write(0,26,"Other info")
+print(1)
+row =1
+for x in range(len(SortedGroups)):
 
+    worksheet.write(row, 0, checknan(str(SortedMembers[x].returnname())))
+    worksheet.write(row, 1, checknan(str(SortedMembers[x].returnphone())))
+    worksheet.write(row, 2, checknan(str(SortedMembers[x].returnemail())))
+    worksheet.write(row, 3, checknan(str(SortedMembers[x].returnmethcontact())))
+    worksheet.write(row, 4, checknan(str(SortedMembers[x].returnifcontacted())))
+    worksheet.write(row, 5, checknan(str(SortedMembers[x].returnifconfirm())))
+    worksheet.write(row, 6, checknan(str(SortedMembers[x].returntimeslot())))
+    worksheet.write(row, 7, checknan(str(SortedMembers[x].returntask())))
+    worksheet.write(row, 8, checknan(str(SortedMembers[x].returnaddress())))
+    worksheet.write(row, 9, checknan(str(SortedMembers[x].returninfo())))
+    worksheet.write(row, 11, checknan(str(SortedGroups[x].returntime())))
+    worksheet.write(row, 12,checknan(str(SortedGroups[x].returnname1())))
+    worksheet.write(row, 13, checknan(str(SortedGroups[x].returnemail1())))
+    worksheet.write(row, 14, checknan(str(SortedGroups[x].returnname2())))
+    worksheet.write(row, 15, checknan(str(SortedGroups[x].returnemail2())))
+    worksheet.write(row, 16, checknan(str(SortedGroups[x].returnname3())))
+    worksheet.write(row, 17, checknan(str(SortedGroups[x].returnemail3())))
+    worksheet.write(row, 18, checknan(str(SortedGroups[x].returnname4())))
+    worksheet.write(row, 19, checknan(str(SortedGroups[x].returnemail4())))
+    worksheet.write(row, 20, checknan(str(SortedGroups[x].returnname5())))
+    worksheet.write(row, 21, checknan(str(SortedGroups[x].returnemail5())))
+    worksheet.write(row, 22, checknan(str(SortedGroups[x].returnav1())))
+    worksheet.write(row, 23,checknan(str( SortedGroups[x].returnav2())))
+    worksheet.write(row, 24, checknan(str(SortedGroups[x].returnif21())))
+    worksheet.write(row, 25, checknan(str(SortedGroups[x].returnnetid())))
+    worksheet.write(row, 26, checknan(str(SortedGroups[x].returninfo())))
+    row = row+1
+row = row+2
+print(1)
+for x in range(len(cantsort)):
+    worksheet.write(row, 0, checknan(str(cantsort[x].returnname())))
+    worksheet.write(row, 1, checknan(str(cantsort[x].returnphone())))
+    worksheet.write(row, 2, checknan(str(cantsort[x].returnemail())))
+    worksheet.write(row, 3, checknan(str(cantsort[x].returnmethcontact())))
+    worksheet.write(row, 4, checknan(str(cantsort[x].returnifcontacted())))
+    worksheet.write(row, 5, checknan(str(cantsort[x].returnifconfirm())))
+    worksheet.write(row, 6, checknan(str(cantsort[x].returntimeslot())))
+    worksheet.write(row, 7, checknan(str(cantsort[x].returntask())))
+    worksheet.write(row, 8, checknan(str(cantsort[x].returnaddress())))
+    worksheet.write(row, 9, checknan(str(cantsort[x].returninfo())))
+    row=row+1
+print(1)
+row = row+2
+for y in range(len(Groups)):
+    for x in range(len(Groups[y])):
+        worksheet.write(row, 11, checknan(str(Groups[y][x].returntime())))
+        worksheet.write(row, 12, checknan(str(Groups[y][x].returnname1())))
+        worksheet.write(row, 13, checknan(str(Groups[y][x].returnemail1())))
+        worksheet.write(row, 14, checknan(str(Groups[y][x].returnname2())))
+        worksheet.write(row, 15, checknan(str(Groups[y][x].returnemail2())))
+        worksheet.write(row, 16, checknan(str(Groups[y][x].returnname3())))
+        worksheet.write(row, 17, checknan(str(Groups[y][x].returnemail3())))
+        worksheet.write(row, 18, checknan(str(Groups[y][x].returnname4())))
+        worksheet.write(row, 19, checknan(str(Groups[y][x].returnemail4())))
+        worksheet.write(row, 20, checknan(str(Groups[y][x].returnname5())))
+        worksheet.write(row, 21, checknan(str(Groups[y][x].returnemail5())))
+        worksheet.write(row, 22, checknan(str(Groups[y][x].returnav1())))
+        worksheet.write(row, 23, checknan(str(Groups[y][x].returnav2())))
+        worksheet.write(row, 24, checknan(str(Groups[y][x].returnif21())))
+        worksheet.write(row, 25, checknan(str(Groups[y][x].returnnetid())))
+        worksheet.write(row, 26, checknan(str(Groups[y][x].returninfo())))
+        row = row +1
 
+workbook.close()
 #for x in sortedDict:
    # print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
    # print (sortedDict.keys((x.returngroupinfo())))
+
+
+
+
+
+
+#
+# row =1
+# for x in range(len(SortedGroups)):
+#     try:
+#         worksheet.write(row, 0, SortedMembers[x].returnname())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 1, SortedMembers[x].returnphone())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 2, SortedMembers[x].returnemail())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 3, SortedMembers[x].returnmethcontact())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 4, SortedMembers[x].returnifcontacted())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 5, SortedMembers[x].returnifconfirm)
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 6, SortedMembers[x].returntimeslot())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 7, SortedMembers[x].returntask())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 8, SortedMembers[x].returnaddress())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 9, SortedMembers[x].returninfo())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 11, SortedGroups[x].returntime())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 12,SortedGroups[x].returnname1())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 13, SortedGroups[x].returnemail1())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 14, SortedGroups[x].returnname2())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 15, SortedGroups[x].returnemail2())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 16, SortedGroups[x].returnname3())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 17, SortedGroups[x].returnemail3())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 18, SortedGroups[x].returnname4())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 19, SortedGroups[x].returnemail4())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 20, SortedGroups[x].returnname5())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 21, SortedGroups[x].returnemail5())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 22, SortedGroups[x].returnav1())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 23, SortedGroups[x].returnav2())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 24, SortedGroups[x].returnif21())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 25, SortedGroups[x].returnnetid())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 26, SortedGroups[x].returninfo())
+#     except:
+#         pass
+#     row = row+1
+# row = row+2
+# for x in range(len(cantsort)):
+#     try:
+#         worksheet.write(row, 0, SortedMembers[x].returnname())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 1, SortedMembers[x].returnphone())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 2, SortedMembers[x].returnemail())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 3, SortedMembers[x].returnmethcontact())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 4, SortedMembers[x].returnifcontacted())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 5, SortedMembers[x].returnifconfirm)
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 6, SortedMembers[x].returntimeslot())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 7, SortedMembers[x].returntask())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 8, SortedMembers[x].returnaddress())
+#     except:
+#         pass
+#     try:
+#         worksheet.write(row, 9, SortedMembers[x].returninfo())
+#     except:
+#         pass
+#     row=row+1
+#
+# row = row+2
+# for y in range(len(Groups)):
+#     for x in range(len(Groups[y])):
+#         try:
+#             worksheet.write(row, 11, SortedGroups[x].returntime())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 12, SortedGroups[x].returnname1())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 13, SortedGroups[x].returnemail1())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 14, SortedGroups[x].returnname2())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 15, SortedGroups[x].returnemail2())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 16, SortedGroups[x].returnname3())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 17, SortedGroups[x].returnemail3())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 18, SortedGroups[x].returnname4())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 19, SortedGroups[x].returnemail4())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 20, SortedGroups[x].returnname5())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 21, SortedGroups[x].returnemail5())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 22, SortedGroups[x].returnav1())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 23, SortedGroups[x].returnav2())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 24, SortedGroups[x].returnif21())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 25, SortedGroups[x].returnnetid())
+#         except:
+#             pass
+#         try:
+#             worksheet.write(row, 26, SortedGroups[x].returninfo())
+#         except:
+#             pass
+#         row = row + 1

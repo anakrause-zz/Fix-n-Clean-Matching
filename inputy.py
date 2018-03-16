@@ -235,6 +235,7 @@ for m in np_df_mem:
     mem = Member(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9])
     members.append(mem)
 
+print (len(members))
 
 def checknan(teststring):
     if "nan" in teststring:
@@ -248,6 +249,12 @@ def combineGroups(first, second, third = 0, fourth = 0):
     two = 0
     three = 0
     four = 0
+    if first.returngroupsize() == 1 and second.returngroupsize() == 1 and third.returngroupsize() == 1 and fourth.returngroupsize() == 1:
+        one = first
+        two = second
+        three = third
+        four = fourth
+
     if first.returngroupsize() < second.returngroupsize():
         two = first
         one = second
@@ -362,11 +369,7 @@ def combineGroups(first, second, third = 0, fourth = 0):
     gr = Group(ntimestamp, nvol1name, nvol1email, nvol2name, nvol2email, nvol3name, nvol3email, nvol4name, nvol4email, nvol5name, nvol5email, ntime1, ntime2, ninfo1, ninfo2, ninfo3)
     return (gr)
 
-#print(combineGroups(thefirst, thesecond, thethird, thefourth).returngroupinfo())
-
 #----------------------------------------
-Groups2 = []
-
 for y in range(10):
     print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
 
@@ -424,29 +427,34 @@ for y in range(10):
         groupsone[y].pop(0)
 
 ## GROUPS of 1 1 1 and 1
-# for y in range(10):
-#     while (len(groupsone[y])) >= 4:
-#         new = combineGroups(groupsone[y][0], groupsone[y][1], groupsone[y][2], groupsone[y][3])
-#         groupsfour.append(new)
-#         groupsone[y].pop(0)
-#         groupsone[y].pop(0)
-#         groupsone[y].pop(0)
-#         groupsone[y].pop(0)
+for y in range(10):
+    while (len(groupsone[y])) >= 4:
+        new = combineGroups(groupsone[y][0], groupsone[y][1], groupsone[y][2], groupsone[y][3])
+        groupsfour.append(new)
+        groupsone[y].pop(0)
+        groupsone[y].pop(0)
+        groupsone[y].pop(0)
+        groupsone[y].pop(0)
 
 
 for y in range(10):
     print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
 
 
+
+
+
+
 ### ALGORITHM PART STARTS HERE
 Groups = []
-
+Groups2 = []
 for x in range(10):
     totgroups = groupsfive[x] + groupsfour[x]
     Groups2.append(totgroups)
 
 #-----------------------------------------------------------------
 Groups=[]
+
 count=0
 totgroups = []
 for x in range(10):
@@ -461,10 +469,7 @@ for x in range(10):
     Groups.append(totgroups)
     totgroups = []
 
-# print (Groups[1][0].returngroupinfo())
-# print (Groups2[1][0].returngroupinfo())
-# print (Groups)
-# print (Groups2)
+
 def biggestGroup(a, y, z):
     Max = len(Groups[a])
     i = a
@@ -478,6 +483,9 @@ def biggestGroup(a, y, z):
             Max = len(Groups[y])
             i=y
     return i ,Max
+
+print (len(members))
+
 cantsort = []
 SortedGroups = []
 SortedMembers = []
@@ -503,16 +511,8 @@ while len(members) > 0:
         if size == 0:
             cantsort.append(members.pop(0))
         else:
-            # sortedDict[members.pop(0)] = Groups[index].pop(0)
             SortedGroups.append(Groups[index].pop(0))
             SortedMembers.append(members.pop(0))
 
-# for x in sortedDict:
-#     print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
-   # print (sortedDict.keys((x.returngroupinfo())))
-
-
-
-#for x in sortedDict:
-   # print ((sortedDict[x].returngroupinfo()), x.returnmeminfo())
-   # print (sortedDict.keys((x.returngroupinfo())))
+## list CANTSORT HOLDS ALL MEMBERS WE CANT SORT
+## list groupsfive, groupsfour, groupsthree, groupstwo, groupsone holds leftover groups/individuals

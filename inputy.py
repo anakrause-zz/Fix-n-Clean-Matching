@@ -67,21 +67,12 @@ elif reply== "Exit":
     action=4
 
 if action !=4:
-    # print (volunteerListAddress)
-    # print (clientListAddress)
-    # print (type(volunteerListAddress))
-    # print (reply)
 
-    # volunteer file
-
-    # xlsx = pd.ExcelFile('volunteers.xlsx')
     xlsx = pd.ExcelFile(volunteerListAddress)
     df = xlsx.parse(0)
     df = df.drop(df.columns[[3, 6, 9, 12]], axis=1)
 
     # members file
-
-    # members = pd.ExcelFile('members.xlsx')
     members = pd.ExcelFile(clientListAddress)
     thingy = members.parse(0)
     thingy = thingy.drop(thingy.columns[[7,8,9,10]], axis=1)
@@ -93,6 +84,7 @@ if action !=4:
     #create structure for members
     members = []
 
+    #Group class with group attributes
     class Group(object):
         def __init__(self, time, name1, email1, name2, email2, name3, email3, name4, email4, name5, email5, av1, av2, if21, netid, info):
             self.time = time
@@ -143,6 +135,7 @@ if action !=4:
             #creates unique pair for each combination of availabilities
             self.avfinal = self.av1num * self.av2num
 
+            #converts one part availability to two part availability
             if (self.avfinal == -1):
                 self.avfinal = 0
             elif (self.avfinal == -2):
@@ -177,7 +170,7 @@ if action !=4:
             else:
                 self.gsize = 5
 
-
+        #return methods
         def returngroupinfo(self):
             return (self.time, self.name1, self.email1, self.name2, self.email2, self.name3, self.email3, self.name4, self.email4, self.name5, self.email5, self.av1, self.av2, self.av1num, self.av2num, self.avfinal, self.if21, self.netid, self.info, self.gsize)
 
@@ -218,6 +211,7 @@ if action !=4:
         def returninfo(self):
             return (self.info)
 
+    #Create member object with member attributes
     class Member(object):
         def __init__(self, name, phone, email, methcontact, ifcontacted, ifconfirm, timeslot, task, address, info):
             self.name = name
@@ -249,7 +243,7 @@ if action !=4:
             else:
                 self.flagged = True
 
-
+        #return methods
         def returnmeminfo(self):
             return (self.name, self.phone, self.email, self.methcontact, self.ifcontacted, self.ifconfirm, self.timeslot, self.numtimeslot, self.task, self.address, self.info, self.flagged)
 
@@ -278,8 +272,7 @@ if action !=4:
         def returnflagged(self):
             return self.flagged
 
-
-
+    #creates 10 empty arrays inside of an array
     def addempty(arr):
         for x in range(10):
             arr.append([])
@@ -291,7 +284,7 @@ if action !=4:
     groupstwo = []
     groupsone = []
 
-    # adds 10 empty arrays to the array
+    # adds 10 empty arrays to the arrays
     addempty(groupsfive)
     addempty(groupsfour)
     addempty(groupsthree)
@@ -325,6 +318,7 @@ if action !=4:
         else:
             return teststring
 
+    #takes in 2-4 groups as input and returns the merged combination of them
     def combineGroups(first, second, third = 0, fourth = 0):
         ## Determines order for greatest to least
         one = 0
@@ -452,10 +446,8 @@ if action !=4:
         return (gr)
 
     #----------------------------------------
-    # for y in range(10):
-    #     print (len(groupsthree[y]), len(groupstwo[y]), len(groupsone[y]))
-    #
 
+    # ALGORITHM TO FIND GROUPS TO MATCH TOGETHER
     # JUST 3 and 2
     for y in range(10):
         if (len(groupsthree[y]) < len(groupstwo[y])):
@@ -529,9 +521,6 @@ if action !=4:
         totgroups = groupsfive[x] + groupsfour[x]
         Groups2.append(totgroups)
 
-    #-----------------------------------------------------------------
-    Groups=[]
-
     count=0
     totgroups = []
     for x in range(10):
@@ -566,6 +555,8 @@ if action !=4:
     SortedMembers = []
     sortedDict = {}
 
+    #Matches the groups to members by matching those with 1 availability first
+    #then taking the first of the largest group of multiple availabilities
     while len(members) > 0:
         if members[0].returnnumtimeslot() == 0:
             cantsort.append(members.pop(0))
@@ -589,107 +580,112 @@ if action !=4:
                 SortedGroups.append(Groups[index].pop(0))
                 SortedMembers.append(members.pop(0))
 
+    def writetofile():
+        workbook = xlsxwriter.Workbook('Matched groups.xlsx')
+        worksheet = workbook.add_worksheet()
+        worksheet.write(0,0,"Community Member Name")
+        worksheet.write(0,1,"Phone Number")
+        worksheet.write(0,2,"Email")
+        worksheet.write(0,3,"Method of contact")
+        worksheet.write(0,4,"contacted to confirm?")
+        worksheet.write(0,5,"confirmed")
+        worksheet.write(0,6,"Date and time")
+        worksheet.write(0,7,"Task")
+        worksheet.write(0,8,"Adress")
+        worksheet.write(0,9,"Other Info")
+        worksheet.write(0,11,"Signup time")
+        worksheet.write(0,12,"Volunteer 1 Name")
+        worksheet.write(0,13,"Volunteer 1 Email")
+        worksheet.write(0,14,"Volunteer 2 Name")
+        worksheet.write(0,15,"Volunteer 2 Email")
+        worksheet.write(0,16,"Volunteer 3 Name")
+        worksheet.write(0,17,"Volunteer 3 Email")
+        worksheet.write(0,18,"Volunteer 4 Name")
+        worksheet.write(0,19,"Volunteer 4 Email")
+        worksheet.write(0,20,"Volunteer 5 Name")
+        worksheet.write(0,21,"Volunteer 5 Email")
+        worksheet.write(0,22,"Time 1")
+        worksheet.write(0,23,"Time 2")
+        worksheet.write(0,24,"Is someone over 21 and will drive?")
+        worksheet.write(0,25,"NetId")
+        worksheet.write(0,26,"Other info")
+        print(1)
+        row =1
+        for x in range(len(SortedGroups)):
 
-    print (type(Groups[1][0].returntime()))
+            worksheet.write(row, 0, checknan(str(SortedMembers[x].returnname())))
+            worksheet.write(row, 1, checknan(str(SortedMembers[x].returnphone())))
+            worksheet.write(row, 2, checknan(str(SortedMembers[x].returnemail())))
+            worksheet.write(row, 3, checknan(str(SortedMembers[x].returnmethcontact())))
+            worksheet.write(row, 4, checknan(str(SortedMembers[x].returnifcontacted())))
+            worksheet.write(row, 5, checknan(str(SortedMembers[x].returnifconfirm())))
+            worksheet.write(row, 6, checknan(str(SortedMembers[x].returntimeslot())))
+            worksheet.write(row, 7, checknan(str(SortedMembers[x].returntask())))
+            worksheet.write(row, 8, checknan(str(SortedMembers[x].returnaddress())))
+            worksheet.write(row, 9, checknan(str(SortedMembers[x].returninfo())))
+            worksheet.write(row, 11, checknan(str(SortedGroups[x].returntime())))
+            worksheet.write(row, 12,checknan(str(SortedGroups[x].returnname1())))
+            worksheet.write(row, 13, checknan(str(SortedGroups[x].returnemail1())))
+            worksheet.write(row, 14, checknan(str(SortedGroups[x].returnname2())))
+            worksheet.write(row, 15, checknan(str(SortedGroups[x].returnemail2())))
+            worksheet.write(row, 16, checknan(str(SortedGroups[x].returnname3())))
+            worksheet.write(row, 17, checknan(str(SortedGroups[x].returnemail3())))
+            worksheet.write(row, 18, checknan(str(SortedGroups[x].returnname4())))
+            worksheet.write(row, 19, checknan(str(SortedGroups[x].returnemail4())))
+            worksheet.write(row, 20, checknan(str(SortedGroups[x].returnname5())))
+            worksheet.write(row, 21, checknan(str(SortedGroups[x].returnemail5())))
+            worksheet.write(row, 22, checknan(str(SortedGroups[x].returnav1())))
+            worksheet.write(row, 23,checknan(str( SortedGroups[x].returnav2())))
+            worksheet.write(row, 24, checknan(str(SortedGroups[x].returnif21())))
+            worksheet.write(row, 25, checknan(str(SortedGroups[x].returnnetid())))
+            worksheet.write(row, 26, checknan(str(SortedGroups[x].returninfo())))
+            row = row+1
+        row = row+2
+        print(1)
+        for x in range(len(cantsort)):
+            worksheet.write(row, 0, checknan(str(cantsort[x].returnname())))
+            worksheet.write(row, 1, checknan(str(cantsort[x].returnphone())))
+            worksheet.write(row, 2, checknan(str(cantsort[x].returnemail())))
+            worksheet.write(row, 3, checknan(str(cantsort[x].returnmethcontact())))
+            worksheet.write(row, 4, checknan(str(cantsort[x].returnifcontacted())))
+            worksheet.write(row, 5, checknan(str(cantsort[x].returnifconfirm())))
+            worksheet.write(row, 6, checknan(str(cantsort[x].returntimeslot())))
+            worksheet.write(row, 7, checknan(str(cantsort[x].returntask())))
+            worksheet.write(row, 8, checknan(str(cantsort[x].returnaddress())))
+            worksheet.write(row, 9, checknan(str(cantsort[x].returninfo())))
+            row=row+1
+        print(1)
+        row = row+2
+        for y in range(len(Groups)):
+            for x in range(len(Groups[y])):
+                worksheet.write(row, 11, checknan(str(Groups[y][x].returntime())))
+                worksheet.write(row, 12, checknan(str(Groups[y][x].returnname1())))
+                worksheet.write(row, 13, checknan(str(Groups[y][x].returnemail1())))
+                worksheet.write(row, 14, checknan(str(Groups[y][x].returnname2())))
+                worksheet.write(row, 15, checknan(str(Groups[y][x].returnemail2())))
+                worksheet.write(row, 16, checknan(str(Groups[y][x].returnname3())))
+                worksheet.write(row, 17, checknan(str(Groups[y][x].returnemail3())))
+                worksheet.write(row, 18, checknan(str(Groups[y][x].returnname4())))
+                worksheet.write(row, 19, checknan(str(Groups[y][x].returnemail4())))
+                worksheet.write(row, 20, checknan(str(Groups[y][x].returnname5())))
+                worksheet.write(row, 21, checknan(str(Groups[y][x].returnemail5())))
+                worksheet.write(row, 22, checknan(str(Groups[y][x].returnav1())))
+                worksheet.write(row, 23, checknan(str(Groups[y][x].returnav2())))
+                worksheet.write(row, 24, checknan(str(Groups[y][x].returnif21())))
+                worksheet.write(row, 25, checknan(str(Groups[y][x].returnnetid())))
+                worksheet.write(row, 26, checknan(str(Groups[y][x].returninfo())))
+                row = row +1
 
-    workbook = xlsxwriter.Workbook('Matched groups.xlsx')
-    worksheet = workbook.add_worksheet()
-    worksheet.write(0,0,"Community Member Name")
-    worksheet.write(0,1,"Phone Number")
-    worksheet.write(0,2,"Email")
-    worksheet.write(0,3,"Method of contact")
-    worksheet.write(0,4,"contacted to confirm?")
-    worksheet.write(0,5,"confirmed")
-    worksheet.write(0,6,"Date and time")
-    worksheet.write(0,7,"Task")
-    worksheet.write(0,8,"Adress")
-    worksheet.write(0,9,"Other Info")
-    worksheet.write(0,11,"Signup time")
-    worksheet.write(0,12,"Volunteer 1 Name")
-    worksheet.write(0,13,"Volunteer 1 Email")
-    worksheet.write(0,14,"Volunteer 2 Name")
-    worksheet.write(0,15,"Volunteer 2 Email")
-    worksheet.write(0,16,"Volunteer 3 Name")
-    worksheet.write(0,17,"Volunteer 3 Email")
-    worksheet.write(0,18,"Volunteer 4 Name")
-    worksheet.write(0,19,"Volunteer 4 Email")
-    worksheet.write(0,20,"Volunteer 5 Name")
-    worksheet.write(0,21,"Volunteer 5 Email")
-    worksheet.write(0,22,"Time 1")
-    worksheet.write(0,23,"Time 2")
-    worksheet.write(0,24,"Is someone over 21 and will drive?")
-    worksheet.write(0,25,"NetId")
-    worksheet.write(0,26,"Other info")
-    print(1)
-    row =1
-    for x in range(len(SortedGroups)):
+        workbook.close()
 
-        worksheet.write(row, 0, checknan(str(SortedMembers[x].returnname())))
-        worksheet.write(row, 1, checknan(str(SortedMembers[x].returnphone())))
-        worksheet.write(row, 2, checknan(str(SortedMembers[x].returnemail())))
-        worksheet.write(row, 3, checknan(str(SortedMembers[x].returnmethcontact())))
-        worksheet.write(row, 4, checknan(str(SortedMembers[x].returnifcontacted())))
-        worksheet.write(row, 5, checknan(str(SortedMembers[x].returnifconfirm())))
-        worksheet.write(row, 6, checknan(str(SortedMembers[x].returntimeslot())))
-        worksheet.write(row, 7, checknan(str(SortedMembers[x].returntask())))
-        worksheet.write(row, 8, checknan(str(SortedMembers[x].returnaddress())))
-        worksheet.write(row, 9, checknan(str(SortedMembers[x].returninfo())))
-        worksheet.write(row, 11, checknan(str(SortedGroups[x].returntime())))
-        worksheet.write(row, 12,checknan(str(SortedGroups[x].returnname1())))
-        worksheet.write(row, 13, checknan(str(SortedGroups[x].returnemail1())))
-        worksheet.write(row, 14, checknan(str(SortedGroups[x].returnname2())))
-        worksheet.write(row, 15, checknan(str(SortedGroups[x].returnemail2())))
-        worksheet.write(row, 16, checknan(str(SortedGroups[x].returnname3())))
-        worksheet.write(row, 17, checknan(str(SortedGroups[x].returnemail3())))
-        worksheet.write(row, 18, checknan(str(SortedGroups[x].returnname4())))
-        worksheet.write(row, 19, checknan(str(SortedGroups[x].returnemail4())))
-        worksheet.write(row, 20, checknan(str(SortedGroups[x].returnname5())))
-        worksheet.write(row, 21, checknan(str(SortedGroups[x].returnemail5())))
-        worksheet.write(row, 22, checknan(str(SortedGroups[x].returnav1())))
-        worksheet.write(row, 23,checknan(str( SortedGroups[x].returnav2())))
-        worksheet.write(row, 24, checknan(str(SortedGroups[x].returnif21())))
-        worksheet.write(row, 25, checknan(str(SortedGroups[x].returnnetid())))
-        worksheet.write(row, 26, checknan(str(SortedGroups[x].returninfo())))
-        row = row+1
-    row = row+2
-    print(1)
-    for x in range(len(cantsort)):
-        worksheet.write(row, 0, checknan(str(cantsort[x].returnname())))
-        worksheet.write(row, 1, checknan(str(cantsort[x].returnphone())))
-        worksheet.write(row, 2, checknan(str(cantsort[x].returnemail())))
-        worksheet.write(row, 3, checknan(str(cantsort[x].returnmethcontact())))
-        worksheet.write(row, 4, checknan(str(cantsort[x].returnifcontacted())))
-        worksheet.write(row, 5, checknan(str(cantsort[x].returnifconfirm())))
-        worksheet.write(row, 6, checknan(str(cantsort[x].returntimeslot())))
-        worksheet.write(row, 7, checknan(str(cantsort[x].returntask())))
-        worksheet.write(row, 8, checknan(str(cantsort[x].returnaddress())))
-        worksheet.write(row, 9, checknan(str(cantsort[x].returninfo())))
-        row=row+1
-    print(1)
-    row = row+2
-    for y in range(len(Groups)):
-        for x in range(len(Groups[y])):
-            worksheet.write(row, 11, checknan(str(Groups[y][x].returntime())))
-            worksheet.write(row, 12, checknan(str(Groups[y][x].returnname1())))
-            worksheet.write(row, 13, checknan(str(Groups[y][x].returnemail1())))
-            worksheet.write(row, 14, checknan(str(Groups[y][x].returnname2())))
-            worksheet.write(row, 15, checknan(str(Groups[y][x].returnemail2())))
-            worksheet.write(row, 16, checknan(str(Groups[y][x].returnname3())))
-            worksheet.write(row, 17, checknan(str(Groups[y][x].returnemail3())))
-            worksheet.write(row, 18, checknan(str(Groups[y][x].returnname4())))
-            worksheet.write(row, 19, checknan(str(Groups[y][x].returnemail4())))
-            worksheet.write(row, 20, checknan(str(Groups[y][x].returnname5())))
-            worksheet.write(row, 21, checknan(str(Groups[y][x].returnemail5())))
-            worksheet.write(row, 22, checknan(str(Groups[y][x].returnav1())))
-            worksheet.write(row, 23, checknan(str(Groups[y][x].returnav2())))
-            worksheet.write(row, 24, checknan(str(Groups[y][x].returnif21())))
-            worksheet.write(row, 25, checknan(str(Groups[y][x].returnnetid())))
-            worksheet.write(row, 26, checknan(str(Groups[y][x].returninfo())))
-            row = row +1
-    fieldValues = ""
-    workbook.close()
+    writetofile()
+
+    msg ="The organized excel file is now exported in the same directory as this file to run the program."
+
+    fieldValues = "t"
+    reply7 = easygui.msgbox(msg)
     reply3=""
-    if action!=1:
+    if action != 1:
         while reply != "Exit":
             msg = "Would you like to use the do not reply fix n clean email or login to your own?"
             choices = ["Do not reply", "My own"]
@@ -705,6 +701,7 @@ if action !=4:
         while login==False:
             login=True
             try:
+                print (2)
                 if reply == "My own":
                     title = "Email Login"
                     fieldNames = ["Email adress", "Password"]
@@ -719,26 +716,17 @@ if action !=4:
                         fieldValues = easygui.multpasswordbox(errmsg, title, fieldNames, fieldValues)
                         if fieldValues is None:
                             break
-                    print(fieldValues[0])
                     s = smtplib.SMTP(host="smtp.outlook.com", port=587)
-                    #s = smtplib.SMTP_SSL('outlook.office365.com:993')
                     s.starttls()
                     s.login(fieldValues[0], fieldValues[1])
-                    # s = smtplib.SMTP(host="*.office365.com", port=443)
-                    # s.starttls()
-                    # s.login(fieldValues[0], fieldValues[1])
-                    #s.login("akrause1999@gmail.com", "Anak1999!!")
 
-                    ## s = smtplib.SMTP_SSL('smtp.gmail.com:465')
-                    ## s.login('akrause1999@gmail.com', 'Anak1999!!')
-                    ## s.sendmail('from', 'to', msg.as_string())
                 else:
                     s = smtplib.SMTP(host="smtp.gmail.com", port=587)
                     s.starttls()
                     s.login("do.not.reply.fixnclean@gmail.com", "fixnclean2018")
             except Exception as e:
                 print(e)
-                if e==(-1, b'The Microsoft Exchange IMAP4 service is ready. [WQBUAFgAUABSADAAMQAwADEAQwBBADAAMAA0ADgALgBDAEEATgBQAFIARAAwADEALgBQAFIATwBEAC4ATwBVAFQATABPAE8ASwAuAEMATwBNAA==]'):
+                if e == (-1, b'The Microsoft Exchange IMAP4 service is ready. [WQBUAFgAUABSADAAMQAwADEAQwBBADAAMAA0ADgALgBDAEEATgBQAFIARAAwADEALgBQAFIATwBEAC4ATwBVAFQATABPAE8ASwAuAEMATwBNAA==]'):
                     break
                 msg = "Login Failed. Please try again. Enter your email and password that you would like to send the email from. (Only works with outlook emails. Includes all Queensu emails) Or cancel to not send emails"
                 login = False
@@ -747,9 +735,14 @@ if action !=4:
                     break
                 if fieldValues is None:
                     break
-        if fieldValues is not None and reply != "Do not reply":
+        print (3)
+        print (fieldValues)
+        print (reply)
+        if fieldValues is not None:
             reply = ""
+            print(4)
             while reply != "Exit":
+                print(5)
                 msg = "Click send emails to send emails to the recipients, or exit to not send the emails"
                 if action==3:
                     msg = "Click send emails to send emails to the recipients, or exit to not send the emails. Now is the time to review the excel matches. Please note that changes to the excel document created will not change the emails that will be sent"
@@ -771,10 +764,11 @@ if action !=4:
                     outaddress = base + target
                     return (outaddress)
 
-                for member in SortedMembers:
-                    addr = (member.returnmeminfo()[-3])
-                    sortedLinks.append(createlink(addr))
-                    sortedAddress.append(addr)
+                for x in range(len(SortedMembers)):
+                    for y in range(SortedGroups[x].returngroupsize()):
+                        addr = (SortedMembers[x].returnmeminfo()[-3])
+                        sortedLinks.append(createlink(addr))
+                        sortedAddress.append(addr)
 
                 # WE HAVE SORTED LINKS
                 # CREATE EMAILS IN ORDER:
@@ -782,24 +776,34 @@ if action !=4:
                 sortedTime = []
 
                 for group in SortedGroups:
-                    email = (group.returngroupinfo()[2])
-                    sortedEmails.append(email)
+                    sortedEmails.append(group.returnemail1())
+                    sortedEmails.append(group.returnemail2())
+                    sortedEmails.append(group.returnemail3())
+                    sortedEmails.append(group.returnemail4())
+                    if group.returngroupsize() == 5:
+                        sortedEmails.append(group.returnemail5())
 
-                for member in SortedMembers:
-                    otime = (member.returnmeminfo()[6])
-                    newtime = ""
-                    if otime == "Saturday Morning":
-                        newtime = "Saturday 9am - 12pm"
-                    elif otime == "Saturday Afternoon":
-                        newtime = "Saturday 1pm - 4pm"
-                    elif otime == "Sunday Morning":
-                        newtime = "Sunday 9am - 12pm"
-                    elif otime == "Sunday Afternoon":
-                        newtime = "Sunday 1pm - 4pm"
 
-                    sortedTime.append(newtime)
+                #add sorted time
+                for x in range(len(SortedMembers)):
+                    for y in range(SortedGroups[x].returngroupsize()):
+                        otime = (SortedMembers[x].returnmeminfo()[6])
+                        newtime = ""
+                        if otime == "Saturday Morning":
+                            newtime = "Saturday 9am - 12pm"
+                        elif otime == "Saturday Afternoon":
+                            newtime = "Saturday 1pm - 4pm"
+                        elif otime == "Sunday Morning":
+                            newtime = "Sunday 9am - 12pm"
+                        elif otime == "Sunday Afternoon":
+                            newtime = "Sunday 1pm - 4pm"
 
-                sortedEmails = ["patrick.nelson1377@gmail.com", "patrick.nelson1377@gmail.com","patrick.nelson1377@gmail.com", "patrick.nelson1377@gmail.com","patrick.nelson1377@gmail.com", "patrick.nelson1377@gmail.com","patrick.nelson1377@gmail.com", "patrick.nelson1377@gmail.com","patrick.nelson1377@gmail.com","patrick.nelson1377@gmail.com","patrick.nelson1377@gmail.com", "patrick.nelson1377@gmail.com","patrick.nelson1377@gmail.com", "patrick.nelson1377@gmail.com","patrick.nelson1377@gmail.com", "patrick.nelson1377@gmail.com","patrick.nelson1377@gmail.com", "patrick.nelson1377@gmail.com","patrick.nelson1377@gmail.com", "patrick.nelson1377@gmail.com"]
+                        sortedTime.append(newtime)
+
+                print (sortedEmails)
+                sortedEmails =[]
+                for x in range(88):
+                    sortedEmails.append("patrick.nelson1377@gmail.com")
 
 
                 def read_template(filename):
@@ -807,12 +811,9 @@ if action !=4:
                         template_file_content = template_file.read()
                     return Template(template_file_content)
 
-
-                #s = smtplib.SMTP_SSL('smtp.gmail.com:465')
-                #s.login('akrause1999@gmail.com', 'Anak1999!!')
-                #s.sendmail('from', 'to', msg.as_string())
-
                 message_template = read_template('message.txt')
+
+
                 for email, time, address, link in zip(sortedEmails, sortedTime, sortedAddress, sortedLinks):
                     msg = MIMEMultipart()  # create a message
 
